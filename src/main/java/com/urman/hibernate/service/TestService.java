@@ -37,9 +37,9 @@ public class TestService {
 		return accountInfo;
 	}
 
-	public List<AccountInfo> getLstAccountInfo(List<Long> accountNumbers) {
+	public List<AccountInfo> getAllAccounts(List<Long> accountNumbers) {
 
-		return bmsTemplateImpl.getLstAccountInfo(accountNumbers);
+		return bmsTemplateImpl.getAllAccounts();
 	}
 
 	public AccountInfo getAccountInfo(Long accountNumber) {

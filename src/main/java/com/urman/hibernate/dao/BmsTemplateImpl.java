@@ -37,7 +37,7 @@ public class BmsTemplateImpl {
 
 		return lstAccountInfo;
 	}
-	public List<AccountInfo> getLstAccountInfo(List<Long> accountNumbers) {
+	public List<AccountInfo> getAllAccounts() {
 
 		List<AccountInfo> lstAccountInfo = accountInfoRepository.findAll();
 

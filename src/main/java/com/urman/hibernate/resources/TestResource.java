@@ -42,7 +42,7 @@ public class TestResource {
 		try {
 			accountNumbers.add(1L);
 			accountNumbers.add(2L);
-			lstAccounts = testServiceHelper.getLstAccountInfo(accountNumbers);
+			lstAccounts = testServiceHelper.getAllAccounts(accountNumbers);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 			JSONObject error=new JSONObject();
@@ -74,30 +74,6 @@ public class TestResource {
 			return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
 		}
 		return Response.status(Response.Status.OK).entity(accountInfo).build();
-	}
-
-	@POST
-	@Path("/customeracc")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response showCustomerAccountInfo(JSONObject jsonObject) {
-		LOGGER.setLevel(Level.ALL);
-		List<AccountInfo> lstaccounts = null;
-		try {
-			String customerId = jsonObject.getString("customerid");
-
-			lstaccounts = testServiceHelper.getCustomerAccounts(customerId);
-			if (null == lstaccounts || CollectionUtils.isEmpty(lstaccounts)) {
-				throw new BaseException("accounts not found");
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			JSONObject error=new JSONObject();
-			error.put("error", e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
-
-		}
-		return Response.status(Response.Status.OK).entity(lstaccounts).build();
 	}
 
 	@POST
