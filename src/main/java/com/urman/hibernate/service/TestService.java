@@ -1,143 +1,65 @@
 package com.urman.hibernate.service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import org.springframework.stereotype.Component;
 
+import com.urman.hibernate.dao.BmsTemplateImpl;
 import com.urman.hibernate.pojo.AccountInfo;
-import com.urman.hibernate.util.BaseException;
-import com.urman.hibernate.util.TestServiceHelper;
+import com.urman.hibernate.pojo.CustomerPersonalInfo;
 
 import net.sf.json.JSONObject;
 
-@Path("u/form")
-@Service
+
+@Component
 public class TestService {
-
+	
 	@Autowired
-	TestServiceHelper testServiceHelper;
+	BmsTemplateImpl bmsTemplateImpl;
 
-	public static Logger LOGGER = Logger.getLogger(TestService.class);
 
-	@GET
-	@Path("/getAllAccounts")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response testMethod() {
-		LOGGER.setLevel(Level.ALL);
-		List<Long> accountNumbers = new ArrayList<Long>();
-		List<AccountInfo> lstAccounts = new ArrayList<AccountInfo>();
-		try {
-			accountNumbers.add(1L);
-			accountNumbers.add(2L);
-			lstAccounts = testServiceHelper.getLstAccountInfo(accountNumbers);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			JSONObject error=new JSONObject();
-			error.put("error", e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
-		}
+	public AccountInfo getAccountInfoFromJson(JSONObject jsonObject) {
 
-		return Response.status(Response.Status.OK).entity(lstAccounts).build();
+		AccountInfo accountInfo = new AccountInfo();
+
+		accountInfo.setAccountType(jsonObject.getString("account_type"));
+		accountInfo.setActivationDate(new Date());
+		CustomerPersonalInfo customerPersonalInfo = bmsTemplateImpl
+				.getCustomerInfo(jsonObject.getString("customer_id"));
+		accountInfo.setCustomerPersonalInfo(customerPersonalInfo);
+		accountInfo.setIfscCode(jsonObject.getString("ifsc_code"));
+		accountInfo.setInterest(Float.parseFloat(jsonObject.getString("interest")));
+		accountInfo.setIntialDeposit(jsonObject.getLong("initial_deposit"));
+		accountInfo.setRegistrationDate(new Date());
+
+		return accountInfo;
 	}
 
-	@POST
-	@Path("/accountinfo")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response showAccountInfo(JSONObject jsonObject) {
-		LOGGER.setLevel(Level.ALL);
-		AccountInfo accountInfo = null;
-		try {
-			Long accountNumber = jsonObject.getLong("accountnumber");
+	public List<AccountInfo> getLstAccountInfo(List<Long> accountNumbers) {
 
-			accountInfo = testServiceHelper.getAccountInfo(accountNumber);
-			if (null == accountInfo) {
-				throw new BaseException("accounts not found");
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			JSONObject error=new JSONObject();
-			error.put("error", e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
-		}
-		return Response.status(Response.Status.OK).entity(accountInfo).build();
+		return bmsTemplateImpl.getLstAccountInfo(accountNumbers);
 	}
 
-	@POST
-	@Path("/customeracc")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response showCustomerAccountInfo(JSONObject jsonObject) {
-		LOGGER.setLevel(Level.ALL);
-		List<AccountInfo> lstaccounts = null;
-		try {
-			String customerId = jsonObject.getString("customerid");
+	public AccountInfo getAccountInfo(Long accountNumber) {
 
-			lstaccounts = testServiceHelper.getCustomerAccounts(customerId);
-			if (null == lstaccounts || CollectionUtils.isEmpty(lstaccounts)) {
-				throw new BaseException("accounts not found");
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			JSONObject error=new JSONObject();
-			error.put("error", e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
-
-		}
-		return Response.status(Response.Status.OK).entity(lstaccounts).build();
+		return bmsTemplateImpl.getAccountInfo(accountNumber);
 	}
 
-	@POST
-	@Path("/createAccount")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response addCustomerAccountInfo(JSONObject jsonObject) {
-		LOGGER.setLevel(Level.ALL);
-		AccountInfo accountInfo = null;
+	public List<AccountInfo> getCustomerAccounts(String customerId) {
 
-		try {
-			accountInfo = testServiceHelper.getAccountInfoFromJson(jsonObject);
-			testServiceHelper.createAccount(accountInfo);
-
-		} catch (Exception e) {
-			LOGGER.error("could not create account because of " + e.getMessage(), e);
-			JSONObject error=new JSONObject();
-			error.put("error", e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
-
-		}
-		return Response.status(Response.Status.CREATED).entity(jsonObject).build();
+		return bmsTemplateImpl.getCustomerAccounts(customerId);
 	}
 
-	@GET
-	@Path("/getCustomerIds")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getCustomerIds() {
-		LOGGER.setLevel(Level.ALL);
-		List<String> customerIds = null;
-		try {
-			customerIds = testServiceHelper.getAllCustomerIds();
-		} catch (Exception e) {
-			LOGGER.error("could not create account because of " + e.getMessage(), e);
-			JSONObject error=new JSONObject();
-			error.put("error", e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
-		}
+	public void createAccount(AccountInfo accountInfo) {
 
-		return Response.status(Response.Status.OK).entity(customerIds).build();
+		bmsTemplateImpl.createAccount(accountInfo);
+	}
+
+	public List<String> getAllCustomerIds() {
+		
+		return bmsTemplateImpl.getAllCustomerIds();
 	}
 
 }
