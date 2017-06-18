@@ -1,4 +1,4 @@
-package com.urman.hibernate.config;
+package com.urman.hibernate.resources;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
