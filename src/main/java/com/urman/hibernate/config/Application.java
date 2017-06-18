@@ -1,22 +1,19 @@
 package com.urman.hibernate.config;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
 
-//for jsr310 java 8 java.time.*
-//@EntityScan(
-//        basePackageClasses = { SpringBootConsoleApplication.class, Jsr310JpaConverters.class }
-//)
+@EnableAutoConfiguration
 @SpringBootApplication
-public class Application implements CommandLineRunner {
+@ComponentScan({"com.urman.hibernate.*"})
+@EntityScan(basePackages = "com.urman.hibernate.pojo")
+public class Application{
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
     }
-
-	public void run(String... args) throws Exception {
-		
-	}
 
 }
