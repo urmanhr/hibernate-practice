@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestCron {
 
+	/**
+	 * this job is scheduled to run daily at 5 : 23 PM
+	 */
 	@Scheduled(cron = "0 23 17 * * ?")
 	public void cronJob1() {
 		System.out.println("test cron");
