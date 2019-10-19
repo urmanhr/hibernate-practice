@@ -66,7 +66,7 @@ public class BmsTemplateImpl {
 	}
 
 	public void createAccount(AccountInfo accountInfo) {
-
+		accountInfoRepository.save(accountInfo);
 
 	}
 
