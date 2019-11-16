@@ -61,5 +61,9 @@ public class TestService {
 		
 		return bmsTemplateImpl.getAllCustomerIds();
 	}
+	
+	public List<AccountInfo> getAccountList(List<Long> accountIds) {
+		return bmsTemplateImpl.getLstAccountInfo2(accountIds);
+	}
 
 }

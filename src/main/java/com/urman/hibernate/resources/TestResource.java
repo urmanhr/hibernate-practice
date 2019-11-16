@@ -91,7 +91,7 @@ public class TestResource {
 			return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
 
 		}
-		return Response.status(Response.Status.CREATED).entity(jsonObject).build();
+		return Response.status(Response.Status.CREATED).entity(accountInfo).build();
 	}
 
 	@GET
@@ -109,6 +109,18 @@ public class TestResource {
 		}
 
 		return Response.status(Response.Status.OK).entity(customerIds).build();
+	}
+	
+	@POST
+	@Path("/getAccounts")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAccountList(JSONObject json) {
+		List<AccountInfo> accountList = null;
+		@SuppressWarnings("unchecked")
+		List<Long> accountIds = json.getJSONArray("accountIdList");
+		accountList = testServiceHelper.getAccountList(accountIds);
+
+		return Response.status(Response.Status.OK).entity(accountList).build();
 	}
 
 }

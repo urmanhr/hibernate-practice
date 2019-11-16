@@ -1,6 +1,7 @@
 package com.urman.hibernate.pojo;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -51,7 +52,7 @@ public class CustomerPersonalInfo {
 	@Column(name="citizenship")
 	String citizenship;
 	
-	@OneToMany(mappedBy="customerPersonalInfo")
+	@OneToMany(mappedBy="customerPersonalInfo", fetch = FetchType.LAZY)
 	List<AccountInfo> lstAccounts;
 
 	public String getCustomerId() {
