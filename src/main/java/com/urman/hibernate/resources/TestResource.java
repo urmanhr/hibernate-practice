@@ -30,6 +30,12 @@ public class TestResource {
 	TestService testServiceHelper;
 
 	public static Logger LOGGER = LoggerFactory.getLogger(TestResource.class);
+	
+	@GET
+	@Path("/staticResponse")
+	public String staticResponse() {
+		return "Hello Docker";
+	}
 
 	@GET
 	@Path("/getAllAccounts")
