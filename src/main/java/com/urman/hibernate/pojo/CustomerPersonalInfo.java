@@ -1,65 +1,79 @@
 package com.urman.hibernate.pojo;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
-@Table(name="customer_personal_info")
-public class CustomerPersonalInfo {
-	
-	@Id
-	@Column(name="customer_id")
-	String customerId;
-	
-	@Column(name="customer_name")
-	String customerName;
-	
-	@Column(name="date_of_birth")
-	Date dateOfBirth;
-	
-	@Column(name="guardian_name")
-	String guardianName;
-	
-	@Column(name="address")
-	String address;
-	
-	@Column(name="contact_no")
-	Long contactNo;
-	
-	@Column(name="mail_id")
-	String mailId;
-	
-	@Column(name="gender")
-	String gender;
-	
-	@Column(name="marital_status")
-	String maritalStatus;
-	
-	@Column(name="identification_doc_type")
-	String idDocType;
-	
-	@Column(name="id_doc_no")
-	String idDocNo;
-	
-	@Column(name="citizenship")
-	String citizenship;
-	
-	@OneToMany(mappedBy="customerPersonalInfo", fetch = FetchType.LAZY)
-	List<AccountInfo> lstAccounts;
+@Table(name = "customer_personal_info")
+@JsonInclude(Include.NON_NULL)
+public class CustomerPersonalInfo implements Serializable {
 
-	public String getCustomerId() {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "customer_id")
+	private long customerId;
+
+	@Column(name = "customer_name")
+	private String customerName;
+
+	@Column(name = "date_of_birth")
+	private Date dateOfBirth;
+
+	@Column(name = "guardian_name")
+	private String guardianName;
+
+	@Column(name = "address")
+	private String address;
+
+	@Column(name = "contact_no")
+	private Long contactNo;
+
+	@Column(name = "mail_id")
+	private String mailId;
+
+	@Column(name = "gender")
+	private String gender;
+
+	@Column(name = "marital_status")
+	private String maritalStatus;
+
+	@Column(name = "identification_doc_type")
+	private String idDocType;
+
+	@Column(name = "id_doc_no")
+	private String idDocNo;
+
+	@Column(name = "citizenship")
+	private String citizenship;
+
+	@OneToMany(mappedBy = "customerPersonalInfo", fetch = FetchType.EAGER)
+	@JsonIgnore
+	private List<AccountInfo> lstAccounts;
+
+	public long getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(String customerId) {
+	public void setCustomerId(long customerId) {
 		this.customerId = customerId;
 	}
 
@@ -158,16 +172,4 @@ public class CustomerPersonalInfo {
 	public void setLstAccounts(List<AccountInfo> lstAccounts) {
 		this.lstAccounts = lstAccounts;
 	}
-
-	@Override
-	public String toString() {
-		return "CustomerPersonalInfo [customerId=" + customerId + ", customerName=" + customerName + ", dateOfBirth="
-				+ dateOfBirth + ", guardianName=" + guardianName + ", address=" + address + ", contactNo=" + contactNo
-				+ ", mailId=" + mailId + ", gender=" + gender + ", maritalStatus=" + maritalStatus + ", idDocType="
-				+ idDocType + ", idDocNo=" + idDocNo + ", citizenship=" + citizenship +"]";
-	}
-	
-	
-	
-	
 }

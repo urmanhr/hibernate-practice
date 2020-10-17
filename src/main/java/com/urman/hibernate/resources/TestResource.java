@@ -1,9 +1,7 @@
 package com.urman.hibernate.resources;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,18 +9,22 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.urman.hibernate.pojo.AccountInfo;
 import com.urman.hibernate.service.TestService;
-import com.urman.hibernate.util.BaseException;
 
 import net.sf.json.JSONObject;
 
-@Path("u/form")
+@Path("v1/test")
 @Service
 public class TestResource {
 
@@ -30,74 +32,36 @@ public class TestResource {
 	TestService testServiceHelper;
 
 	public static Logger LOGGER = LoggerFactory.getLogger(TestResource.class);
-	
+
 	@GET
 	@Path("/staticResponse")
 	public String staticResponse() {
 		return "Hello Docker";
 	}
 
-	@GET
-	@Path("/getAllAccounts")
+	@POST
+	@Path("/corsBypass")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response testMethod() {
-		List<Long> accountNumbers = new ArrayList<Long>();
-		List<AccountInfo> lstAccounts = new ArrayList<AccountInfo>();
+	public Response testCors(String url) {
+		String response = StringUtils.EMPTY;
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+
 		try {
-			accountNumbers.add(1L);
-			accountNumbers.add(2L);
-			lstAccounts = testServiceHelper.getAllAccounts(accountNumbers);
+
+			HttpGet request = new HttpGet(url);
+
+			// add request headers
+			request.addHeader("loginsessionkey", null);
+			request.addHeader("X-Requested-With", null);
+
+			CloseableHttpResponse responseHttp = httpClient.execute(request);
+			response = EntityUtils.toString(responseHttp.getEntity());
+			System.out.println(response);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
-			JSONObject error = new JSONObject();
-			error.put("error", e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
 		}
 
-		return Response.status(Response.Status.OK).entity(lstAccounts).build();
-	}
-
-	@POST
-	@Path("/accountinfo")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response showAccountInfo(JSONObject jsonObject) {
-		AccountInfo accountInfo = null;
-		try {
-			Long accountNumber = jsonObject.getLong("accountnumber");
-
-			accountInfo = testServiceHelper.getAccountInfo(accountNumber);
-			if (null == accountInfo) {
-				throw new BaseException("accounts not found");
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			JSONObject error = new JSONObject();
-			error.put("error", e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
-		}
-		return Response.status(Response.Status.OK).entity(accountInfo).build();
-	}
-
-	@POST
-	@Path("/createAccount")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response addCustomerAccountInfo(JSONObject jsonObject) {
-		AccountInfo accountInfo = null;
-
-		try {
-			accountInfo = testServiceHelper.getAccountInfoFromJson(jsonObject);
-			testServiceHelper.createAccount(accountInfo);
-
-		} catch (Exception e) {
-			LOGGER.error("could not create account because of " + e.getMessage(), e);
-			JSONObject error = new JSONObject();
-			error.put("error", e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
-
-		}
-		return Response.status(Response.Status.CREATED).entity(accountInfo).build();
+		return Response.status(Response.Status.OK).entity(response).header("Access-Control-Allow-Origin", "*").build();
 	}
 
 	@GET
@@ -116,17 +80,7 @@ public class TestResource {
 
 		return Response.status(Response.Status.OK).entity(customerIds).build();
 	}
-	
-	@POST
-	@Path("/getAccounts")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAccountList(JSONObject json) {
-		List<AccountInfo> accountList = null;
-		@SuppressWarnings("unchecked")
-		List<Long> accountIds = json.getJSONArray("accountIdList");
-		accountList = testServiceHelper.getAccountList(accountIds);
 
-		return Response.status(Response.Status.OK).entity(accountList).build();
-	}
+	
 
 }

@@ -25,7 +25,7 @@ public class BmsTemplateImpl {
 
 	@Autowired
 	AccountInfoRepository accountInfoRepository;
-	
+
 	@Autowired
 	CustomerRepository customerRepository;
 
@@ -65,19 +65,14 @@ public class BmsTemplateImpl {
 	}
 
 	public AccountInfo getAccountInfo(Long accountNumber) {
-		AccountInfo accountInfo = null;
-
-		return accountInfo;
+		return accountInfoRepository.getOne(accountNumber);
 	}
 
 	public List<AccountInfo> getCustomerAccounts(String customerId) {
-
-		List<AccountInfo> lstAccounts = null;
-
-		return lstAccounts;
+		return accountInfoRepository.findByCustomerPersonalInfoCustomerId(customerId);
 	}
 
-	public CustomerPersonalInfo getCustomerInfo(String customerId) {
+	public CustomerPersonalInfo getCustomerInfo(long customerId) {
 
 		return customerRepository.getOne(customerId);
 	}
@@ -92,6 +87,15 @@ public class BmsTemplateImpl {
 		List<String> customerIds = null;
 
 		return customerIds;
+	}
+
+	public void createCustomer(CustomerPersonalInfo customer) {
+		customerRepository.save(customer);
+
+	}
+
+	public List<CustomerPersonalInfo> getCustomers(List<Long> customerIds) {
+		return customerRepository.findAllById(customerIds);
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.urman.hibernate.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,32 +9,11 @@ import com.urman.hibernate.dao.BmsTemplateImpl;
 import com.urman.hibernate.pojo.AccountInfo;
 import com.urman.hibernate.pojo.CustomerPersonalInfo;
 
-import net.sf.json.JSONObject;
-
-
 @Component
 public class TestService {
-	
+
 	@Autowired
 	BmsTemplateImpl bmsTemplateImpl;
-
-
-	public AccountInfo getAccountInfoFromJson(JSONObject jsonObject) {
-
-		AccountInfo accountInfo = new AccountInfo();
-
-		accountInfo.setAccountType(jsonObject.getString("account_type"));
-		accountInfo.setActivationDate(new Date());
-		CustomerPersonalInfo customerPersonalInfo = bmsTemplateImpl
-				.getCustomerInfo(jsonObject.getString("customer_id"));
-		accountInfo.setCustomerPersonalInfo(customerPersonalInfo);
-		accountInfo.setIfscCode(jsonObject.getString("ifsc_code"));
-		accountInfo.setInterest(Float.parseFloat(jsonObject.getString("interest")));
-		accountInfo.setIntialDeposit(jsonObject.getLong("initial_deposit"));
-		accountInfo.setRegistrationDate(new Date());
-
-		return accountInfo;
-	}
 
 	public List<AccountInfo> getAllAccounts(List<Long> accountNumbers) {
 
@@ -58,12 +36,24 @@ public class TestService {
 	}
 
 	public List<String> getAllCustomerIds() {
-		
+
 		return bmsTemplateImpl.getAllCustomerIds();
 	}
-	
+
 	public List<AccountInfo> getAccountList(List<Long> accountIds) {
 		return bmsTemplateImpl.getLstAccountInfo2(accountIds);
 	}
 
+	public void createCustomer(CustomerPersonalInfo customer) {
+		bmsTemplateImpl.createCustomer(customer);
+
+	}
+
+	public CustomerPersonalInfo getCustomerInfo(long customerId) {
+		return bmsTemplateImpl.getCustomerInfo(customerId);
+	}
+
+	public List<CustomerPersonalInfo> getCustomerList(List<Long> customerIds) {
+		return bmsTemplateImpl.getCustomers(customerIds);
+	}
 }

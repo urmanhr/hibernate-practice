@@ -1,49 +1,56 @@
 package com.urman.hibernate.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
-@Table(name="account_info")
-public class AccountInfo {
+@Table(name = "account_info")
+@JsonInclude(Include.NON_NULL)
+public class AccountInfo implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="account_no")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "account_no")
 	private long accountNumber;
-	
-	@Column(name="account_type")
+
+	@Column(name = "account_type")
 	private String accountType;
-	
-	@Column(name="registration_date")
+
+	@Column(name = "registration_date")
 	private Date registrationDate;
-	
-	@Column(name="activation_date")
+
+	@Column(name = "activation_date")
 	private Date activationDate;
-	
-	@Column(name="ifsc_code")
+
+	@Column(name = "ifsc_code")
 	private String ifscCode;
-	
-	@Column(name="interest")
+
+	@Column(name = "interest")
 	private Float interest;
-	
-	@Column(name="intial_deposit")
+
+	@Column(name = "intial_deposit")
 	private Long intialDeposit;
-	
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name="customer_id")
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "customer_id")
 	CustomerPersonalInfo customerPersonalInfo;
 
 	public Long getAccountNumber() {
@@ -94,8 +101,6 @@ public class AccountInfo {
 		this.ifscCode = ifscCode;
 	}
 
-	
-
 	public Float getInterest() {
 		return interest;
 	}
@@ -111,16 +116,4 @@ public class AccountInfo {
 	public void setIntialDeposit(Long intialDeposit) {
 		this.intialDeposit = intialDeposit;
 	}
-
-	@Override
-	public String toString() {
-		return "AccountInfo [accountNumber=" + accountNumber + ", accountType=" + accountType + ", registrationDate="
-				+ registrationDate + ", activationDate=" + activationDate + ", ifscCode=" + ifscCode + ", interest="
-				+ interest + ", intialDeposit=" + intialDeposit + "]";
-	}
-	
-	
-	
-	
-	
 }

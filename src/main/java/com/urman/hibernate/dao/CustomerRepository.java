@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.urman.hibernate.pojo.CustomerPersonalInfo;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<CustomerPersonalInfo, String>{
-	
+public interface CustomerRepository extends JpaRepository<CustomerPersonalInfo, Long> {
 
 }

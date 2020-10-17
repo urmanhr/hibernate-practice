@@ -12,4 +12,6 @@ public interface AccountInfoRepository extends JpaRepository<AccountInfo, Long>{
 	
 	List<AccountInfo> findByAccountNumberIn (List<Long> accountNumbers);
 
+	List<AccountInfo> findByCustomerPersonalInfoCustomerId(String customerId);
+
 }
