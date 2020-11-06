@@ -1,0 +1,12 @@
+FROM maven:3.5-jdk-8-alpine
+WORKDIR /app
+COPY . /app
+RUN mvn install
+
+FROM openjdk:8
+WORKDIR /app
+COPY --from=1 /app/target/urman.jar /app
+RUN echo "America/New_York" > /etc/timezone
+RUN dpkg-reconfigure -f noninteractive tzdata
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "urman.jar"]
