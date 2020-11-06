@@ -5,6 +5,6 @@ RUN mvn install
 
 FROM openjdk:8
 WORKDIR /app
-COPY --from=1 /app/target/urman.jar /app
+COPY --from=0 /app/target/urman.jar /app
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "urman.jar"]
