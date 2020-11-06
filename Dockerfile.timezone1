@@ -6,7 +6,7 @@ RUN mvn install
 FROM openjdk:8
 WORKDIR /app
 COPY --from=0 /app/target/urman.jar /app
+RUN cp /usr/share/zoneinfo/America/New_York /etc/localtime
 RUN echo "America/New_York" > /etc/timezone
-RUN dpkg-reconfigure -f noninteractive tzdata
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "urman.jar"]
