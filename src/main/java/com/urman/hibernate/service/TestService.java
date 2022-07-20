@@ -41,7 +41,7 @@ public class TestService {
 	}
 
 	public List<AccountInfo> getAccountList(List<Long> accountIds) {
-		return bmsTemplateImpl.getLstAccountInfo2(accountIds);
+		return bmsTemplateImpl.getLstAccountInfo1(accountIds);
 	}
 
 	public void createCustomer(CustomerPersonalInfo customer) {

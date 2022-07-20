@@ -85,9 +85,7 @@ public class AccountResource {
 		@SuppressWarnings("unchecked")
 		List<Long> accountIds = json.getJSONArray("accountIdList");
 		accountList = testService.getAccountList(accountIds);
-		List<AccountInfo> result = new ArrayList<>(0);
-		BeanUtils.copyProperties(accountList, result);
 
-		return Response.status(Response.Status.OK).entity(result).build();
+		return Response.status(Response.Status.OK).entity(accountList).build();
 	}
 }
